@@ -1,60 +1,63 @@
+var elements = [];
+const addTxt = document.querySelector(".addTxt");
+const list = document.querySelector(".list")
 
-let savedTodos = [];
-
-
-
-//creating to do function
-function createNewElement(){
-if(document.getElementById("the-input").value != ""){
-  savedTodos.push(document.getElementById("the-input").value)
-  display()
-}
+window.onload = function(){
+  if(JSON.parse(localStorage.getItem("to-do-elements")) != null){
+    elements = JSON.parse(localStorage.getItem("to-do-elements"))
+    this.display();
+  }
 }
 
-function display(){
-  document.getElementById('the-input').innerHTML = '';
-  for(var i = 0; i < savedTodos.length; i++)
-  document.getElementById('the-input').innerHTML 
-}
-
-
-  var theSpanTag = document.createElement('SPAN');  // creating an inline container 
-  var txt = document.createTextNode('\u00D7'); //creating X sign
-  theSpanTag.className = 'close'; // naming X sign as a 'close'
-  theSpanTag.appendChild(txt); // container + X sign
-  li.appendChild(theSpanTag) // adding X sign to li 
-
-
-
-// removing list onclick 
-function removeButtonOnClick() {
-  for(var i = 0 ; i < closeButton.length; i++ ){
-    closeButton[i].onclick = function() {
-      var theDiv = this.parentElement;
-      theDiv.style.display = 'none'
+function addElement() {
+  if(addTxt.value.trim() != ""){
+    elements.push(addTxt.value.trim());
+    if(localStorage.getItem("to-do-elements") == null){
+      localStorage.setItem("to-do-elements", JSON.stringify(elements))
     }
-   }
-
-//close button
-var closeButton = document.getElementsByClassName('close')
-for(var i = 0 ; i < closeButton.length; i++ ){
-  closeButton[i].onclick = function() {
-    var theDiv = this.parentElement;
-    theDiv.style.display = 'none'
+    else{
+      localStorage.setItem("to-do-elements", JSON.stringify(elements))
+    }
+   
+    display();
   }
+  addTxt.value = "";
+
+}
+
+function display() {
+list.innerHTML = "";
+for(var i = 0; i < elements.length; i++)
+  list.innerHTML += "<center><div class='element'>" + elements[i] + 
+  "<img class='tick' src='./ttickk.jpg' onclick='strike("+i+")'><img class='trashbin' src='./trash.png' onclick='del("+i+")'></div></center>"; 
+
+
+}
+
+function del(param) {
+elements.splice(param, 1);
+if(localStorage.getItem("to-do-elements") == null){
+  localStorage.setItem("to-do-elements", JSON.stringify(elements))
+}
+else{
+  localStorage.setItem("to-do-elements", JSON.stringify(elements))
+}
+display();
+}
+
+function strike(param) {
+  if(elements[param].includes("<strike>")){
+    elements[param] = elements[param].replace("<strike>", '');
+    elements[param] = elements[param].replace("</strike>", '');
+  }
+ else {
+   elements[param] = '<strike>' + elements[param] + '</strike>';
  }
-
-
-// Add a "checked" symbol when clicking on a list item
-var ulList = document.querySelector('ul');
-ulList.addEventListener('click', function(event){
-  console.log(event)
-  if(event.target.tagName = 'LI'){
-    event.target.classList.toggle('checked')
-  }
-
-
-})
-
-// document.getElementById("the-input").value
-// document.getElementById('the-input').value = '';  // after adding the input box  gest cleared
+ if(localStorage.getItem("to-do-elements") == null){
+  localStorage.setItem("to-do-elements", JSON.stringify(elements))
+}
+else{
+  localStorage.setItem("to-do-elements", JSON.stringify(elements))
+}
+display();
+}
